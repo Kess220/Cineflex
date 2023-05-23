@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import styled from "styled-components";
 import axios from "axios";
 
@@ -23,9 +24,11 @@ const ImageComponent = () => {
   return (
     <>
       {images.map((image) => (
-        <MovieContainer key={image.id}>
-          <img src={image.posterURL} alt={image.title} />
-        </MovieContainer>
+        <Link to={`/sessoes/${image.id}`} key={image.id}>
+          <MovieContainer>
+            <img src={image.posterURL} alt={image.title} />
+          </MovieContainer>
+        </Link>
       ))}
     </>
   );
