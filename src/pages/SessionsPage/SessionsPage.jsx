@@ -70,12 +70,10 @@ const PageContainer = styled.div`
   margin-top: 30px;
   padding-bottom: 120px;
   padding-top: 70px;
-
   div {
     margin-top: 20px;
   }
 `;
-
 const SessionContainer = styled.div`
   display: flex;
   flex-direction: column;
@@ -85,21 +83,17 @@ const SessionContainer = styled.div`
   color: #293845;
   padding: 0 20px;
 `;
-
 const ButtonsContainer = styled.div`
   display: flex;
   flex-direction: row;
   margin: 20px 0;
-
   button {
     margin-right: 20px;
   }
-
   a {
     text-decoration: none;
   }
 `;
-
 const FooterContainer = styled.div`
   width: 100%;
   height: 120px;
@@ -119,7 +113,6 @@ const FooterContainer = styled.div`
     justify-content: center;
     background-color: white;
     margin: 12px;
-
     img {
       width: 50px;
       height: 70px;
@@ -131,10 +124,8 @@ const FooterContainer = styled.div`
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-
     p {
       text-align: left;
-
       &:nth-child(2) {
         margin-top: 10px;
       }

@@ -1,20 +1,16 @@
 import styled from "styled-components";
 import ImageComponent from "../../components/ImageComponent";
 
-const HomePage = () => {
+export default function HomePage() {
   return (
-    <>
-      <NavContainer>CINEFLEX</NavContainer>
-
-      <PageContainer>
-        Selecione o filme
-        <ListContainer>
-          <ImageComponent />
-        </ListContainer>
-      </PageContainer>
-    </>
+    <PageContainer>
+      Selecione o filme
+      <ListContainer>
+        <ImageComponent />
+      </ListContainer>
+    </PageContainer>
   );
-};
+}
 
 const PageContainer = styled.div`
   display: flex;
@@ -24,25 +20,8 @@ const PageContainer = styled.div`
   font-size: 24px;
   text-align: center;
   color: #293845;
-  margin-top: 30px;
+  margin-top: 100px; /* Ajuste a margem superior conforme necessário */
   padding-top: 70px;
-`;
-const NavContainer = styled.div`
-  width: 100%;
-  height: 70px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: #c3cfd9;
-  color: #e8833a;
-  font-family: "Roboto", sans-serif;
-  font-size: 34px;
-  position: fixed;
-  top: 0;
-  a {
-    text-decoration: none;
-    color: #e8833a;
-  }
 `;
 
 const ListContainer = styled.div`
@@ -52,5 +31,3 @@ const ListContainer = styled.div`
   justify-content: center;
   padding: 10px;
 `;
-
-export default HomePage;
