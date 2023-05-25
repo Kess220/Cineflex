@@ -41,7 +41,7 @@ const SuccessPage = () => {
   );
 };
 
-
+// Styled components...
 
 export default SuccessPage;
 

@@ -73,14 +73,23 @@ const SeatsPage = () => {
       );
       setSeats(updatedResponse.data);
 
+      // Get the selected seat objects with names
+      const selectedSeatObjects = seatsData.filter((seat) =>
+        selectedSeats.includes(seat.id)
+      );
+
+      // Get the seat names from the selected seat objects
+      const selectedSeatNames = selectedSeatObjects.map((seat) => seat.name);
+
       // Redirect to SuccessPage
       navigate("/sucesso", {
         state: {
           movieTitle: movie?.title,
           session: `${day?.weekday} - ${name}`,
-          selectedSeats,
+          selectedSeats: selectedSeatNames,
           buyerName,
           buyerCPF,
+          seatsData: seatsData, // Pass the 'seatsData' prop
         },
       });
     } catch (error) {
