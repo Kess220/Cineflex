@@ -25,7 +25,7 @@ const ImageComponent = () => {
     <>
       {images.map((image) => (
         <Link to={`/sessoes/${image.id}`} key={image.id}>
-          <MovieContainer>
+          <MovieContainer data-test="movie">
             <img src={image.posterURL} alt={image.title} />
           </MovieContainer>
         </Link>

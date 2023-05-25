@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import axios from "axios";
 
 const SessionsPage = () => {
   const { movieId } = useParams();
   const [movie, setMovie] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchMovie = async () => {
@@ -19,6 +20,7 @@ const SessionsPage = () => {
           }
         );
         setMovie(response.data);
+        console.log(response.data); // Exibe os dados no console
       } catch (error) {
         console.error(error);
       }
@@ -27,6 +29,23 @@ const SessionsPage = () => {
     fetchMovie();
   }, [movieId]);
 
+  const handleShowtimeClick = async (showtime) => {
+    try {
+      const seatsResponse = await axios.get(
+        `https://mock-api.driven.com.br/api/v8/cineflex/showtimes/${showtime.id}/seats`,
+        {
+          headers: {
+            Authorization: "jPzNYwM1GsaG0kvIgk5Jd5lv",
+          },
+        }
+      );
+      console.log(seatsResponse.data); // Exibe os dados dos assentos no console
+      navigate(`/assentos/${showtime.id}`); // Redireciona para a página de assentos com o ID da sessão
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   return (
     <PageContainer>
       {movie && (
@@ -34,19 +53,25 @@ const SessionsPage = () => {
           <h2>Selecione o horário</h2>
           <div>
             {movie.days.map((day) => (
-              <SessionContainer key={day.id}>
+              <SessionContainer data-test="movie-day" key={day.id}>
                 <p>
                   {day.weekday} - {day.date}
                 </p>
                 <ButtonsContainer>
                   {day.showtimes.map((showtime) => (
-                    <button key={showtime.id}>{showtime.name}</button>
+                    <button
+                      data-test="showtime"
+                      key={showtime.id}
+                      onClick={() => handleShowtimeClick(showtime)}
+                    >
+                      {showtime.name}
+                    </button>
                   ))}
                 </ButtonsContainer>
               </SessionContainer>
             ))}
           </div>
-          <FooterContainer>
+          <FooterContainer data-test="footer">
             <div>
               <img src={movie.posterURL} alt="poster" />
             </div>

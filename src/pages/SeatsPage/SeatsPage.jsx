@@ -1,23 +1,117 @@
+import { useEffect, useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import styled from "styled-components";
+import axios from "axios";
 
 const SeatsPage = () => {
+  const navigate = useNavigate();
+  const { showtimeId } = useParams();
+  const [seats, setSeats] = useState(null);
+  const [selectedSeats, setSelectedSeats] = useState([]);
+  const [buyerName, setBuyerName] = useState("");
+  const [buyerCPF, setBuyerCPF] = useState("");
+
+  useEffect(() => {
+    const fetchSeats = async () => {
+      try {
+        const response = await axios.get(
+          `https://mock-api.driven.com.br/api/v8/cineflex/showtimes/${showtimeId}/seats`,
+          {
+            headers: {
+              Authorization: "jPzNYwM1GsaG0kvIgk5Jd5lv",
+            },
+          }
+        );
+        setSeats(response.data);
+        console.log(response.data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchSeats();
+  }, [showtimeId]);
+
+  const { name, day, movie, seats: seatsData } = seats || {};
+
+  const handleSeatClick = (seatId) => {
+    const selectedSeat = seatsData.find((seat) => seat.id === seatId);
+
+    if (selectedSeat && selectedSeat.isAvailable) {
+      if (selectedSeats.includes(seatId)) {
+        setSelectedSeats(selectedSeats.filter((seat) => seat !== seatId));
+      } else {
+        setSelectedSeats([...selectedSeats, seatId]);
+      }
+    }
+  };
+
+  const handleReservation = async () => {
+    try {
+      const response = await axios.post(
+        "https://mock-api.driven.com.br/api/v8/cineflex/seats/book-many",
+        {
+          ids: selectedSeats,
+          name: buyerName,
+          cpf: buyerCPF,
+        },
+        {
+          headers: {
+            Authorization: "jPzNYwM1GsaG0kvIgk5Jd5lv",
+          },
+        }
+      );
+      console.log(response.data);
+
+      const updatedResponse = await axios.get(
+        `https://mock-api.driven.com.br/api/v8/cineflex/showtimes/${showtimeId}/seats`,
+        {
+          headers: {
+            Authorization: "jPzNYwM1GsaG0kvIgk5Jd5lv",
+          },
+        }
+      );
+      setSeats(updatedResponse.data);
+
+      // Redirect to SuccessPage
+      navigate("/sucesso", {
+        state: {
+          movieTitle: movie?.title,
+          session: `${day?.weekday} - ${name}`,
+          selectedSeats,
+          buyerName,
+          buyerCPF,
+        },
+      });
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   return (
     <PageContainer>
       Selecione o(s) assento(s)
       <SeatsContainer>
-        <SeatItem>01</SeatItem>
-        <SeatItem>02</SeatItem>
-        <SeatItem>03</SeatItem>
-        <SeatItem>04</SeatItem>
-        <SeatItem>05</SeatItem>
+        {seatsData &&
+          seatsData.map((seat) => (
+            <SeatItem
+              data-test="seat"
+              key={seat.id}
+              isAvailable={seat.isAvailable}
+              isSelected={selectedSeats.includes(seat.id)}
+              onClick={() => handleSeatClick(seat.id)}
+            >
+              {seat.name}
+            </SeatItem>
+          ))}
       </SeatsContainer>
       <CaptionContainer>
         <CaptionItem>
-          <CaptionCircle />
+          <CaptionCircle isSelected />
           Selecionado
         </CaptionItem>
         <CaptionItem>
-          <CaptionCircle />
+          <CaptionCircle isAvailable />
           Disponível
         </CaptionItem>
         <CaptionItem>
@@ -27,23 +121,30 @@ const SeatsPage = () => {
       </CaptionContainer>
       <FormContainer>
         Nome do Comprador:
-        <input placeholder="Digite seu nome..." />
+        <input
+          data-test="client-name"
+          placeholder="Digite seu nome..."
+          value={buyerName}
+          onChange={(e) => setBuyerName(e.target.value)}
+        />
         CPF do Comprador:
-        <input placeholder="Digite seu CPF..." />
-        <button>Reservar Assento(s)</button>
+        <input
+          data-test="client-cpf"
+          placeholder="Digite seu CPF..."
+          value={buyerCPF}
+          onChange={(e) => setBuyerCPF(e.target.value)}
+        />
+        <button data-test="book-seat-btn" onClick={handleReservation}>
+          Reservar Assento(s)
+        </button>
       </FormContainer>
-      <FooterContainer>
+      <FooterContainer data-test="footer">
         <div>
-          <img
-            src={
-              "https://br.web.img2.acsta.net/pictures/22/05/16/17/59/5165498.jpg"
-            }
-            alt="poster"
-          />
+          <img src={movie?.posterURL} alt="poster" />
         </div>
         <div>
-          <p>Tudo em todo lugar ao mesmo tempo</p>
-          <p>Sexta - 14h00</p>
+          <p>{movie?.title}</p>
+          <p>{`${day?.weekday} - ${name}`}</p>
         </div>
       </FooterContainer>
     </PageContainer>
@@ -62,7 +163,6 @@ const PageContainer = styled.div`
   padding-bottom: 120px;
   padding-top: 70px;
 `;
-
 const SeatsContainer = styled.div`
   width: 330px;
   display: flex;
@@ -72,7 +172,6 @@ const SeatsContainer = styled.div`
   justify-content: center;
   margin-top: 20px;
 `;
-
 const FormContainer = styled.div`
   width: calc(100vw - 40px);
   display: flex;
@@ -87,7 +186,6 @@ const FormContainer = styled.div`
     width: calc(100vw - 60px);
   }
 `;
-
 const CaptionContainer = styled.div`
   display: flex;
   flex-direction: row;
@@ -95,12 +193,12 @@ const CaptionContainer = styled.div`
   justify-content: space-between;
   margin: 20px;
 `;
-
 const CaptionCircle = styled.div`
-  border: 1px solid blue;
-  /* Essa cor deve mudar */
-  background-color: lightblue;
-  /* Essa cor deve mudar */
+  background-color: ${(props) =>
+    props.isAvailable ? "#C3CFD9" : props.isSelected ? "#1AAE9E" : "#FBE192"};
+  border: 1px solid
+    ${(props) =>
+      props.isAvailable ? "#7B8B99" : props.isSelected ? "#0E7D71" : "#F7C52B"};
   height: 25px;
   width: 25px;
   border-radius: 25px;
@@ -116,12 +214,12 @@ const CaptionItem = styled.div`
   align-items: center;
   font-size: 12px;
 `;
-
 const SeatItem = styled.div`
-  border: 1px solid blue;
-  /* Essa cor deve mudar */
-  background-color: lightblue;
-  /* Essa cor deve mudar */
+  background-color: ${(props) =>
+    props.isSelected ? "#1AAE9E" : props.isAvailable ? "#C3CFD9" : "#FBE192"};
+  border: 1px solid
+    ${(props) =>
+      props.isSelected ? "#0E7D71" : props.isAvailable ? "#7B8B99" : "#F7C52B"};
   height: 25px;
   width: 25px;
   border-radius: 25px;
@@ -171,4 +269,5 @@ const FooterContainer = styled.div`
     }
   }
 `;
+
 export default SeatsPage;

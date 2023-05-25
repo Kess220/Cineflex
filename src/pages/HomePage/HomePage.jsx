@@ -20,7 +20,7 @@ const PageContainer = styled.div`
   font-size: 24px;
   text-align: center;
   color: #293845;
-  margin-top: 100px; /* Ajuste a margem superior conforme necessário */
+  margin-top: 100px;
   padding-top: 70px;
 `;
 
