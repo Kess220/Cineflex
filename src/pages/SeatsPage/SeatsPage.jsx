@@ -40,7 +40,12 @@ const SeatsPage = () => {
   const handleSeatClick = (seatId) => {
     const selectedSeat = seatsData.find((seat) => seat.id === seatId);
 
-    if (selectedSeat && selectedSeat.isAvailable) {
+    if (selectedSeat) {
+      if (!selectedSeat.isAvailable) {
+        alert("Esse assento não está disponível");
+        return;
+      }
+
       if (selectedSeats.includes(seatId)) {
         setSelectedSeats(selectedSeats.filter((seat) => seat !== seatId));
       } else {
@@ -50,6 +55,15 @@ const SeatsPage = () => {
   };
 
   const handleReservation = async () => {
+    if (selectedSeats.length === 0) {
+      alert("Selecione ao menos 1 assento para poder prosseguir.");
+      return;
+    }
+    if (buyerName.trim() === "" || buyerCPF.trim() === "") {
+      alert("Preencha todos os dados para finalizar sua compra!");
+      return;
+    }
+
     try {
       const response = await axios.post(
         "https://mock-api.driven.com.br/api/v8/cineflex/seats/book-many",
@@ -241,6 +255,7 @@ const SeatItem = styled.div`
   align-items: center;
   justify-content: center;
   margin: 5px 3px;
+  cursor: ${(props) => (props.isAvailable ? "pointer" : "default")};
 `;
 
 const FooterContainer = styled.div`
