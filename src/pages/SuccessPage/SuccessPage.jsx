@@ -5,6 +5,7 @@ const SuccessPage = () => {
   const location = useLocation();
   const { movieTitle, session, selectedSeats, buyerName, buyerCPF } =
     location.state || {};
+  console.log(movieTitle);
 
   return (
     <PageContainer>

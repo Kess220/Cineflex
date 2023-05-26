@@ -10,6 +10,7 @@ const SeatsPage = () => {
   const [selectedSeats, setSelectedSeats] = useState([]);
   const [buyerName, setBuyerName] = useState("");
   const [buyerCPF, setBuyerCPF] = useState("");
+  const [movieTitle, setMovieTitle] = useState("");
 
   useEffect(() => {
     const fetchSeats = async () => {
@@ -23,6 +24,8 @@ const SeatsPage = () => {
           }
         );
         setSeats(response.data);
+        setMovieTitle(response.data?.movie?.title || "");
+
         console.log(response.data);
       } catch (error) {
         console.error(error);
@@ -84,7 +87,7 @@ const SeatsPage = () => {
       // Redirect to SuccessPage
       navigate("/sucesso", {
         state: {
-          movieTitle: movie?.title,
+          movieTitle: movieTitle,
           session: `${day?.weekday} - ${name}`,
           selectedSeats: selectedSeatNames,
           buyerName,
