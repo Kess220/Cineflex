@@ -102,7 +102,7 @@ const SeatsPage = () => {
       navigate("/sucesso", {
         state: {
           movieTitle: movieTitle,
-          session: `${day?.weekday} - ${name}`,
+          session: `${day?.date} - ${name}`,
           selectedSeats: selectedSeatNames,
           buyerName,
           buyerCPF,
