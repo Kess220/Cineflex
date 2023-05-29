@@ -8,21 +8,21 @@ import SuccessPage from "../pages/SuccessPage/SuccessPage";
 
 const AppRouter = () => {
   return (
-    <>
-      <NavContainer>CINEFLEX</NavContainer>
-      <Router>
+    <Router>
+      <>
+        <NavContainer>
+          <NavText>CINEFLEX</NavText>
+        </NavContainer>
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/sessoes/:movieId" element={<SessionsPage />} />
           <Route path="/assentos/:showtimeId" element={<SeatsPage />} />
           <Route path="/sucesso" element={<SuccessPage />} />
         </Routes>
-      </Router>
-    </>
+      </>
+    </Router>
   );
 };
-
-export default AppRouter;
 
 const NavContainer = styled.div`
   width: 100%;
@@ -41,3 +41,7 @@ const NavContainer = styled.div`
     color: #e8833a;
   }
 `;
+
+const NavText = styled.h1``;
+
+export default AppRouter;

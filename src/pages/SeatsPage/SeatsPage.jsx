@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import axios from "axios";
+import SeatItem from "../../components/SeatItem";
 
 const SeatsPage = () => {
   const navigate = useNavigate();
@@ -121,14 +122,12 @@ const SeatsPage = () => {
         {seatsData &&
           seatsData.map((seat) => (
             <SeatItem
-              data-test="seat"
               key={seat.id}
+              seatId={seat.name}
               isAvailable={seat.isAvailable}
               isSelected={selectedSeats.includes(seat.id)}
               onClick={() => handleSeatClick(seat.id)}
-            >
-              {seat.name}
-            </SeatItem>
+            />
           ))}
       </SeatsContainer>
       <CaptionContainer>
@@ -224,38 +223,18 @@ const CaptionCircle = styled.div`
     props.isAvailable ? "#C3CFD9" : props.isSelected ? "#1AAE9E" : "#FBE192"};
   border: 1px solid
     ${(props) =>
-      props.isAvailable ? "#7B8B99" : props.isSelected ? "#0E7D71" : "#F7C52B"};
-  height: 25px;
-  width: 25px;
-  border-radius: 25px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 5px 3px;
+      props.isAvailable ? "#7B8B9A" : props.isSelected ? "#1AAE9E" : "#F7C84D"};
+  border-radius: 50%;
+  width: 15px;
+  height: 15px;
+  margin-right: 5px;
 `;
-
 const CaptionItem = styled.div`
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
-  font-size: 12px;
-`;
-const SeatItem = styled.div`
-  background-color: ${(props) =>
-    props.isSelected ? "#1AAE9E" : props.isAvailable ? "#C3CFD9" : "#FBE192"};
-  border: 1px solid
-    ${(props) =>
-      props.isSelected ? "#0E7D71" : props.isAvailable ? "#7B8B99" : "#F7C52B"};
-  height: 25px;
-  width: 25px;
-  border-radius: 25px;
-  font-family: "Roboto";
-  font-size: 11px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 5px 3px;
-  cursor: ${(props) => (props.isAvailable ? "pointer" : "default")};
+  font-size: 14px;
+  color: #7b8b9a;
 `;
 
 const FooterContainer = styled.div`
