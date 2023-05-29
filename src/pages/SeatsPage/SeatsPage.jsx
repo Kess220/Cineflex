@@ -3,6 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import axios from "axios";
 import SeatItem from "../../components/SeatItem";
+import InputMask from "react-input-mask";
 
 const SeatsPage = () => {
   const navigate = useNavigate();
@@ -91,15 +92,12 @@ const SeatsPage = () => {
       );
       setSeats(updatedResponse.data);
 
-      // Get the selected seat objects with names
       const selectedSeatObjects = seatsData.filter((seat) =>
         selectedSeats.includes(seat.id)
       );
 
-      // Get the seat names from the selected seat objects
       const selectedSeatNames = selectedSeatObjects.map((seat) => seat.name);
 
-      // Redirect to SuccessPage
       navigate("/sucesso", {
         state: {
           movieTitle: movieTitle,
@@ -107,7 +105,7 @@ const SeatsPage = () => {
           selectedSeats: selectedSeatNames,
           buyerName,
           buyerCPF,
-          seatsData: seatsData, // Pass the 'seatsData' prop
+          seatsData: seatsData,
         },
       });
     } catch (error) {
@@ -153,8 +151,9 @@ const SeatsPage = () => {
           onChange={(e) => setBuyerName(e.target.value)}
         />
         CPF do Comprador:
-        <input
+        <InputMask
           data-test="client-cpf"
+          mask="999.999.999-99"
           placeholder="Digite seu CPF..."
           value={buyerCPF}
           onChange={(e) => setBuyerCPF(e.target.value)}
